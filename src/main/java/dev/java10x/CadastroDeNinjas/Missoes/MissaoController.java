@@ -3,35 +3,30 @@ package dev.java10x.CadastroDeNinjas.Missoes;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping
+@RequestMapping("/missao")
 public class MissaoController {
 
-    @GetMapping("/missao")
-    public String missao() {
-        return "Essa é a rota de missao";
-    }
-
-    @PostMapping("/criarmissao")
+    @PostMapping("/criar")
     public String criarMissao() {
         return "Missao criada";
     }
 
-    @GetMapping("/mostrartodasmissoes")
+    @GetMapping("/listar")
     public String mostrarTodasMissoes() {
         return "Todas missoes";
     }
 
-    @GetMapping("/mostrarmissoesid")
+    @GetMapping("/listarid")
     public String mostrarMissoesPorId() {
         return "Missoes por ID";
     }
 
-    @PutMapping("/atualizarmissao")
+    @PutMapping("/atualizar")
     public String atualizarMissao() {
         return "Missao atualizada";
     }
 
-    @DeleteMapping("/deletarmissao")
+    @DeleteMapping("/deletar")
     public String deletarMissao() {
         return "Missao deletada";
     }
