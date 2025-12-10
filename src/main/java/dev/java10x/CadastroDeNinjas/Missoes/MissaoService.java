@@ -30,4 +30,12 @@ public class MissaoService {
     public void deletarMissao(Long id) {
         missaoRepository.deleteById(id);
     }
+
+    public MissaoModel atualizarMissao(Long id, MissaoModel missaoAtualizada) {
+        if (missaoRepository.existsById(id)) {
+            missaoAtualizada.setId(id);
+            return missaoRepository.save(missaoAtualizada);
+        }
+        return null;
+    }
 }
