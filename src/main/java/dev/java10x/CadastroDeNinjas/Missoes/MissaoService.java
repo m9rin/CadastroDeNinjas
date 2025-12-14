@@ -4,37 +4,49 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MissaoService {
 
     private MissaoRepository missaoRepository;
+    private MissaoMapper missaoMapper;
 
-    public MissaoService(MissaoRepository missaoRepository) {
+    public MissaoService(MissaoRepository missaoRepository, MissaoMapper missaoMapper) {
         this.missaoRepository = missaoRepository;
+        this.missaoMapper = missaoMapper;
     }
 
-    public List<MissaoModel> listarMissoes() {
-        return missaoRepository.findAll();
+    public List<MissaoDTO> listarMissoes() {
+        List<MissaoModel> missoes = missaoRepository.findAll();
+        return missoes.stream()
+                .map(missaoMapper::map)
+                .collect(Collectors.toList());
+
     }
 
-    public MissaoModel listarMissaoPorId(Long id) {
+    public MissaoDTO listarMissaoPorId(Long id) {
         Optional<MissaoModel> missao = missaoRepository.findById(id);
-        return missao.orElse(null);
+        return missao.map(missaoMapper::map).orElse(null);
     }
 
-    public MissaoModel criarMissao(MissaoModel missao) {
-        return missaoRepository.save(missao);
+    public MissaoDTO criarMissao(MissaoDTO missaoDTO) {
+        MissaoModel missao = missaoMapper.map(missaoDTO);
+        missao = missaoRepository.save(missao);
+        return missaoMapper.map(missao);
     }
 
     public void deletarMissao(Long id) {
         missaoRepository.deleteById(id);
     }
 
-    public MissaoModel atualizarMissao(Long id, MissaoModel missaoAtualizada) {
-        if (missaoRepository.existsById(id)) {
+    public MissaoDTO atualizarMissao(Long id, MissaoDTO missaoDTO) {
+        Optional<MissaoModel> missaoExistente = missaoRepository.findById(id);
+        if (missaoExistente.isPresent()) {
+            MissaoModel missaoAtualizada = missaoMapper.map(missaoDTO);
             missaoAtualizada.setId(id);
-            return missaoRepository.save(missaoAtualizada);
+            MissaoModel missaoSalva = missaoRepository.save(missaoAtualizada);
+            return missaoMapper.map(missaoSalva);
         }
         return null;
     }
